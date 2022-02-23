@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Pok%C3%A9_Ball_icon.svg/512px-Pok%C3%A9_Ball_icon.svg.png" type="image/icon type">
+    <title>PokeApi</title>
+    <style>
+        
+        html, content{
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            color:#5c5c5c;
+        }
+        .title{margin-bottom:0;}
+        .search{
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        #pokemon{
+            display: flex;
+            flex: 50%;
+        }
+        .column{
+            float: left;
+            width: 50%;
+            width: 250px;
+        }
+        .card{
+            position: relative;
+            border-radius: 25px;
+            padding: 20px;
+
+        }
+        .sprite{
+            display: flex;
+            vertical-align: middle;
+            align-items: center;
+            height: 100%;
+            justify-content: center;
+        }
+        img{
+         height: 200px
+        }
+        .card::before {   
+          width: 250px;
+          content: "";
+          background-image: url('https://pngimg.com/uploads/pokeball/pokeball_PNG8.png');
+          background-size: contain;
+          position: absolute;
+          background-repeat: no-repeat;
+          top: 160px;
+          right: 20px;
+          bottom: 0px;
+          left: 50px;
+          height: 180px;
+          opacity: 0.05;
+    }
+    .stats-table{
+        width: 220px;
+        padding-left: 25px;
+        padding-bottom: 55px;
+    }
+    .stats-element{
+        width: 100px;
+        height: 55px;
+        float: left;
+    }
+    p{
+        margin-top:0;
+        font-weight: bold;
+    }
+        #normal{border: 4px solid #a9a878;}#normal p{color: #a9a878;}
+        #fighting{border: 4px solid #c53029;}#fighting p{color: #c53029;}
+        #flying{border: 4px solid #a890f0;}#flying p{color: #a890f0;}
+        #poison{border: 4px solid #9f40a1;}#poison p{color: #9f40a1;}
+        #ground{border: 4px solid #e0c06a;}#ground p{color: #e0c06a;}
+        #rock{border: 4px solid #b7a039;}#rock p{color: #b7a039;}
+        #bug{border: 4px solid #a8b920;}#bug p{color: #a8b920;}
+        #ghost{border: 4px solid #705798;}#ghost p{color: #705798;}
+        #steel{border: 4px solid #b8b8d0;}#steel p{color: #b8b8d0;}
+        #fire{border: 4px solid #f07f2f;}#fire p{color: #f07f2f;}
+        #water{border: 4px solid #6790f0;}#water p{color: #6790f0;}
+        #grass{border: 4px solid #78c84f;} #grass p{color: #78c84f;}
+        #electric{border: 4px solid #f9cf30;}#electric p{color: #f9cf30;}
+        #psychic{border: 4px solid #f85888;}#psychic p{color: #f85888;}
+        #ice{border: 4px solid #98d8d8;}#ice p{color: #98d8d8;}
+        #dragon{border: 4px solid #7038f9;}#dragon p{color: #7038f9;}
+        #dark{border: 4px solid #6f5848;}#dark p{color: #6f5848;}
+        #fairy{border: 4px solid #ff9be1;}#fairy p{color: #ff9be1;}
+        #unknown{border: 4px solid black;}#unknown p{color: black;}
+        #shadow{border: 4px solid gray;}#shadow p{color: gray;}
+      </style>
+</head>
+<body>
+    <div class="content">
+        <div class="search">
+            <input id="search" type="text" placeholder="Search for a Pokemon..."/>
+            <button onclick="searchPknm()">Search</button>
+        </div>
+        <div id="pokemon"/>
+    </div>
+</body>
+
+<script>
+var searchInput=document.getElementById("search");
+var pokemonResultDiv=document.getElementById("pokemon");
+
+function searchPknm(){
+    var searchValue=searchInput.value;
+    pokemonResultDiv.innerHTML=`<p>Loading...</p>`
+    fetch(`https://pokeapi.co/api/v2/pokemon/${searchValue.toLowerCase()}`).then((result)=>{
+        
+        return (result.json())
+    }
+    ).then(poke=>{
+        console.log(poke);
+        pokemonResultDiv.innerHTML=`
+        <div "">
+            <div class="column sprite">
+                <img src="${poke.sprites.front_default}"/>
+            </div>
+        <div class="card column" id="${poke.types[0].type.name}">
+            <h1 class="title">#${poke.id.toString().padStart(3,'0')} ${poke.name.charAt(0).toUpperCase() + poke.name.substr(1).toLowerCase()}</h1>
+            <p>${poke.types[0].type.name.charAt(0).toUpperCase() + poke.types[0].type.name.substr(1).toLowerCase()}</p>
+            <h1 class="title">Base Stats</h1>
+            <div class="stats-table">
+                    <div class="stats-element">
+                        <h3>HP:${poke.stats[0].base_stat}</h3>
+                    </div>
+                    <div class="stats-element">
+                        <h3>SpAtk:${poke.stats[3].base_stat}</h3>
+                    </div>
+                    <div class="stats-element">
+                        <h3>Atk:${poke.stats[1].base_stat}</h3>
+                    </div>
+                    <div class="stats-element">
+                        <h3>SpDef:${poke.stats[4].base_stat}</h3>
+                    </div>
+                    <div class="stats-element">
+                        <h3>Def:${poke.stats[2].base_stat}</h3>
+                    </div>
+                    <div class="stats-element">
+                        <h3>Spd:${poke.stats[5].base_stat}</h3>
+                    </div>
+
+            </table>
+        </div>
+    </div>
+        `
+    }).catch(error=>{
+        console.log(error)
+        pokemonResultDiv.innerHTML=`<p>Error, try again...</p>`
+    });
+}
+</script>
+</html>
